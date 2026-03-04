@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sample.common.dao.mapper.TaskMapper">
+  <resultMap id="TaskMap" type="sample.common.dao.entity.Task">
+    <id column="id" property="id" />
+    <result column="username" property="username" />
+    <result column="title" property="title" />
+    <result column="content" property="content" />
+    <result column="name" property="name" />
+    <result column="start_date" property="startDate" />
+    <result column="end_date" property="endDate" />
+    <result column="created_at" property="createdAt" />
+    <result column="updated_at" property="updatedAt" />
+  </resultMap>
+
+  <select id="findByUsername" resultMap="TaskMap">
+    SELECT * FROM tasks
+    WHERE username = #{username}
+    ORDER BY id DESC
+    LIMIT #{limit} OFFSET #{offset}
+  </select>
+
+  <select id="countByUsername" resultType="int">
+    SELECT COUNT(*) FROM tasks
+    WHERE username = #{username}
+  </select>
+
+  <select id="findById" resultMap="TaskMap">
+    SELECT * FROM tasks
+    WHERE id = #{id}
+  </select>
+
+  <insert id="insert" parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO tasks (
+      username, title, content, name, start_date, end_date
+    ) VALUES (
+      #{username}, #{title}, #{content}, #{name}, #{startDate}, #{endDate}
+    )
+  </insert>
+
+  <update id="update" parameterType="sample.common.dao.entity.Task">
+    UPDATE tasks
+    SET title = #{title},
+        content = #{content},
+        name = #{name},
+        start_date = #{startDate},
+        end_date = #{endDate},
+        updated_at = date_trunc('second', now())
+    WHERE id = #{id}
+  </update>
+
+  <delete id="delete">
+    DELETE FROM tasks WHERE id = #{id}
+  </delete>
+</mapper>
